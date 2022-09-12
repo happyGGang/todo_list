@@ -100,6 +100,46 @@
       .catch((error) => console.error(error.message))
   }
 
+  const changeEditMode = (e) => {
+    const $item = e.target.closest('.item')
+    const $label = $item.querySelector('label')
+    const $editInput = $item.querySelector('input[type="text"]')
+    const $contentButtons = $item.querySelector('.content_buttons')
+    const $editButtons = $item.querySelector('.edit_buttons')
+    const value = $editInput.value
+
+    if (e.target.className === 'todo_edit_button') {
+      $label.style.display = 'none'
+      $editInput.style.display = 'block'
+      $contentButtons.style.display = 'none'
+      $editButtons.style.display = 'block'
+      $editInput.focus()
+      $editInput.value = ''
+      $editInput.value = value
+    }
+
+    if (e.target.className === 'todo_edit_cancel_button') {
+      $label.style.display = 'block'
+      $editInput.style.display = 'none'
+      $contentButtons.style.display = 'block'
+      $editButtons.style.display = 'none'
+      $editInput.value = $label.innerText
+    }
+  }
+
+  const removeTodo = (e) => {
+    if (e.target.className !== 'todo_remove_button') return
+    const $item = e.target.closest('.item')
+    const id = $item.dataset.id
+
+    fetch(`${API_URL}/${id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then(getTodos)
+      .catch((error) => console.error(error.message))
+  }
+
   const init = () => {
     window.addEventListener('DOMContentLoaded', () => {
       getTodos()
@@ -107,6 +147,8 @@
 
     $form.addEventListener('submit', addTodo)
     $todos.addEventListener('click', toggleTodo)
+    $todos.addEventListener('click', changeEditMode)
+    $todos.addEventListener('click', editTodo)
   }
 
   init()
