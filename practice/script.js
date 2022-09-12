@@ -127,6 +127,24 @@
     }
   }
 
+  const editTodo = (e) => {
+    if (e.target.className !== 'todo_edit_confirm_button') return
+    const $item = e.target.closest('.item')
+    const id = $item.dataset.id
+    const $editInput = $item.querySelector('input[type="text"]')
+    const content = $editInput.value
+
+    fetch(`${API_URL}/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ content }),
+    })
+      .then((response) => response.json())
+      .then(getTodos)
+      .catch((error) => console.error(error.message))
+  }
+
+
   const removeTodo = (e) => {
     if (e.target.className !== 'todo_remove_button') return
     const $item = e.target.closest('.item')
@@ -149,6 +167,7 @@
     $todos.addEventListener('click', toggleTodo)
     $todos.addEventListener('click', changeEditMode)
     $todos.addEventListener('click', editTodo)
+    $todos.addEventListener('click', removeTodo)
   }
 
   init()
