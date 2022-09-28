@@ -65,8 +65,9 @@
   }
 
   const createTodoElement = (item) => {
-    const { id, content, completed } = item
+    const { id, content, completed, recommended } = item
     const isChecked = completed ? 'checked' : ''
+    const isRecommended = recommended ? 'active' : ''
     const $todoItem = document.createElement('div')
     $todoItem.classList.add('item')
     $todoItem.dataset.id = id
@@ -81,6 +82,10 @@
               <input type="text" value="${content}" />
             </div>
             <div class="item_buttons content_buttons">
+            <button class="todo_recommend_button ${isRecommended}">
+              <i class="far fa-star"></i>
+              <i class="fas fa-star"></i>
+            </button>
               <button class="todo_edit_button">
                 <i class="far fa-edit"></i>
               </button>
@@ -154,6 +159,21 @@
       .catch((error) => console.error(error.message))
   }
 
+  const recommendTodo = (e) => {
+    if(!e.target.classList.contains('todo_recommend_button')) return
+    const $item = e.target.closest('.item')
+    const id = $item.dataset.id
+    const recommended = !e.target.classList.contains('active')
+    fetch(`${API_URL}/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ recommended }),
+    })
+    .then((response) => response.json())
+    .then(getTodos)
+    .catch((error) => console.log(error.message))
+  }
+
   const changeEditMode = (e) => {
     const $item = e.target.closest('.item')
     const $label = $item.querySelector('label')
@@ -222,6 +242,7 @@
     $todos.addEventListener('click', changeEditMode)
     $todos.addEventListener('click', editTodo)
     $todos.addEventListener('click', removeTodo)
+    $todos.addEventListener('click', recommendTodo)
   }
 
   init()
