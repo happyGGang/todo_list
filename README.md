@@ -7,7 +7,7 @@
 ### strict mode
 
 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Strict_mode
-
+- 꼭 필요는 없지만 자바스크립트 실력 향상을 위해 켜고 하겠
 - 엄격하게 문법 검사를 실시하여 기존에는 무시되던 오류를 발생시킴
 
 ### json-server
